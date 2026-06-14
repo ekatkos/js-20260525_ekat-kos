@@ -9,7 +9,7 @@ interface Options {
 }
 
 export default class ColumnChart {
-	element: HTMLDivElement;
+	element!: HTMLElement;
 	chartHeight = 50;
 
   constructor(private options: Options = {}) {
@@ -22,7 +22,7 @@ export default class ColumnChart {
     const maxValue = Math.max(...data);
     const scale = 50 / maxValue;
 
-    body.innerHTML = data.map(item => `
+    if(body) body.innerHTML = data.map(item => `
       <div style="--value: ${Math.floor(item * scale)}" data-tooltip="${(item / maxValue * 100).toFixed(0)}%"></div>
     `).join('');
   }
@@ -35,7 +35,7 @@ export default class ColumnChart {
 
   destroy(): void {
     this.remove();
-    this.element = null;
+    this.element = null!;
 	}
 	
   private render(): void {
@@ -49,7 +49,7 @@ export default class ColumnChart {
   private template(): string {
     const maxValue = this.options.data ? Math.max(...this.options.data) : 0;
 	 const scale = this.chartHeight / maxValue;
-	 const heading = this.options.formatHeading ? this.options.formatHeading(this.options.value) : this.options.value
+	 const heading = this.options.formatHeading ? this.options.formatHeading(this.options.value ?? 0) : this.options.value
 
     return `
       <div class="column-chart" style="--chart-height: ${this.chartHeight}">
